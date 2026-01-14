@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者設定 - 打刻管理アプリ</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+  <!-- パスワード入力モーダル -->
+  <div class="password-overlay" id="passwordOverlay">
+    <div class="password-modal">
+      <h2>管理者認証</h2>
+      <p>パスワードを入力してください</p>
+      <input type="password" id="passwordInput" placeholder="パスワード" autofocus>
+      <div class="password-error" id="passwordError"></div>
+      <button id="passwordSubmit" class="password-submit-btn">ログイン</button>
+    </div>
+  </div>
+
+  <header id="mainHeader" style="display: none;">
+    <div class="header-top">
+      <h1>管理者設定</h1>
+      <button class="hamburger-menu" id="hamburgerMenu" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <!-- ハンバーガーメニュー -->
+    <nav class="hamburger-nav" id="hamburgerNav">
+      <a href="index.html" class="nav-link">打刻ページに戻る</a>
+      <a href="admin.html" class="nav-link">時間管理ページ</a>
+    </nav>
+  </header>
+
+  <main id="mainContent" style="display: none;">
+    <section class="settings-section">
+      <h2>設定</h2>
+      
+      <div class="settings-group">
+        <h3>パスワード変更</h3>
+        <div class="password-change-form">
+          <div class="form-item">
+            <label for="currentPassword">現在のパスワード</label>
+            <input type="password" id="currentPassword" placeholder="現在のパスワード">
+          </div>
+          <div class="form-item">
+            <label for="newPassword">新しいパスワード</label>
+            <input type="password" id="newPassword" placeholder="新しいパスワード">
+          </div>
+          <div class="form-item">
+            <label for="confirmPassword">新しいパスワード（確認）</label>
+            <input type="password" id="confirmPassword" placeholder="新しいパスワード（確認）">
+          </div>
+          <div class="password-change-error" id="passwordChangeError"></div>
+          <button id="changePasswordBtn" class="settings-btn">パスワードを変更</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>社員管理</h3>
+        <div class="employee-management">
+          <div class="add-employee-form">
+            <h4>社員を追加</h4>
+            <div class="form-item">
+              <label for="newEmployeeName">社員名</label>
+              <input type="text" id="newEmployeeName" placeholder="例: 山田 太郎">
+            </div>
+            <div class="add-employee-error" id="addEmployeeError"></div>
+            <button id="addEmployeeBtn" class="settings-btn">社員を追加</button>
+          </div>
+
+          <div class="remove-employee-form">
+            <h4>社員を削除</h4>
+            <div class="form-item">
+              <label for="removeEmployeeSelect">削除する社員を選択</label>
+              <select id="removeEmployeeSelect">
+                <option value="">選択してください</option>
+              </select>
+            </div>
+            <div class="remove-employee-note">
+              <p>※ 社員を削除しても、その社員の打刻データは残ります。</p>
+            </div>
+            <div class="remove-employee-error" id="removeEmployeeError"></div>
+            <button id="removeEmployeeBtn" class="settings-btn settings-btn-danger">社員を削除</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>

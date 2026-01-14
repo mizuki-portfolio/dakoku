@@ -10,10 +10,9 @@
 
 <body>
   <header>
-
+    <a href="admin.html" class="admin-link">管理者ページ</a>
     <p id="today"></p>
     <p id="todayTime"></p>
-
   </header>
 
   <main>
@@ -21,12 +20,10 @@
     <section class="names">
       <h2>社員一覧</h2>
       <ul id="names">
-        <li>畠山 太郎</li>
-        <li>佐藤 次郎</li>
-        <li>田中 三子</li>
+        <!-- 社員リストがここに動的に読み込まれます -->
       </ul>
-      <button id="close">戻る</button>
     </section>
+    <button id="close" class="close-button">戻る</button>
     <section>
       <div id="intime">打刻</div>
     </section>
@@ -36,7 +33,6 @@
       <ul class="timers">
 
       </ul>
-      <input type="date" id="calendar">
     </section>
   </main>
   <div class="overlay"></div>
@@ -45,7 +41,19 @@
       <li id="check-in">出勤</li>
       <li id="check-out">退勤</li>
     </ul>
-    <button id="close2">戻る</button>
+  </div>
+  <button id="close2" class="close-button">戻る</button>
+
+  <!-- 確認モーダル -->
+  <div class="confirm-overlay" id="confirmOverlay" style="display: none;">
+    <div class="confirm-modal">
+      <h3>確認</h3>
+      <p id="confirmMessage">同じ操作を連続で行おうとしています。続行しますか？</p>
+      <div class="confirm-buttons">
+        <button id="confirmYes" class="confirm-btn confirm-yes">確認</button>
+        <button id="confirmNo" class="confirm-btn confirm-no">キャンセル</button>
+      </div>
+    </div>
   </div>
 
   <script src="main.js"></script>

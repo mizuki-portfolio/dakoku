@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者用 - 打刻管理アプリ</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+  <!-- パスワード入力モーダル -->
+  <div class="password-overlay" id="passwordOverlay">
+    <div class="password-modal">
+      <h2>管理者認証</h2>
+      <p>パスワードを入力してください</p>
+      <input type="password" id="passwordInput" placeholder="パスワード" autofocus>
+      <div class="password-error" id="passwordError"></div>
+      <button id="passwordSubmit" class="password-submit-btn">ログイン</button>
+    </div>
+  </div>
+
+  <header id="mainHeader" style="display: none;">
+    <div class="header-top">
+      <h1>管理者用ダッシュボード</h1>
+      <button class="hamburger-menu" id="hamburgerMenu" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div class="header-controls">
+      <div class="month-selector">
+        <label for="monthSelect">表示月：</label>
+        <input type="month" id="monthSelect" value="">
+      </div>
+    </div>
+    <!-- ハンバーガーメニュー -->
+    <nav class="hamburger-nav" id="hamburgerNav">
+      <a href="index.html" class="nav-link">打刻ページに戻る</a>
+      <a href="admin-settings.html" class="nav-link">設定ページ</a>
+    </nav>
+  </header>
+
+  <main id="mainContent" style="display: none;">
+    <section class="summary-section">
+      <h2>月間サマリー</h2>
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="card-label">総労働時間</div>
+          <div class="card-value" id="totalWorkHours">0時間</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-label">総残業時間</div>
+          <div class="card-value overtime" id="totalOvertimeHours">0時間</div>
+        </div>
+        <div class="summary-card">
+          <div class="card-label">平均労働時間/日</div>
+          <div class="card-value" id="avgWorkHours">0時間</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="employee-section">
+      <h2>社員別集計</h2>
+      <div class="employee-list" id="employeeList">
+        <!-- 社員データがここに表示されます -->
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h2>詳細データ</h2>
+      <div class="detail-controls">
+        <select id="employeeFilter">
+          <option value="all">全員</option>
+        </select>
+        <input type="date" id="dateFilter" value="">
+      </div>
+      <div class="detail-table-container">
+        <table class="detail-table" id="detailTable">
+          <thead>
+            <tr>
+              <th>日付</th>
+              <th>社員名</th>
+              <th>出勤時刻</th>
+              <th>退勤時刻</th>
+              <th>労働時間</th>
+              <th>残業時間</th>
+            </tr>
+          </thead>
+          <tbody id="detailTableBody">
+            <!-- 詳細データがここに表示されます -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>
