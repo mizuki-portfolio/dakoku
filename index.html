@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>打刻アプリ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+
+    <p id="today"></p>
+    <p id="todayTime"></p>
+
+  </header>
+
+  <main>
+    <div class="overlay-names"></div>
+    <section class="names">
+      <h2>社員一覧</h2>
+      <ul id="names">
+        <li>畠山 太郎</li>
+        <li>佐藤 次郎</li>
+        <li>田中 三子</li>
+      </ul>
+      <button id="close">戻る</button>
+    </section>
+    <section>
+      <div id="intime">打刻</div>
+    </section>
+
+    <section class="timer">
+
+      <ul class="timers">
+
+      </ul>
+      <input type="date" id="calendar">
+    </section>
+  </main>
+  <div class="overlay"></div>
+  <div class="modal">
+    <ul>
+      <li id="check-in">出勤</li>
+      <li id="check-out">退勤</li>
+    </ul>
+    <button id="close2">戻る</button>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+
+</html>
