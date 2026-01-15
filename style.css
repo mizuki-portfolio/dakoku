@@ -24,41 +24,41 @@ p {
 }
 
 header #today {
-  font-size: 30px;
+  font-size: 34px;
 }
 
 header #todayTime {
-  font-size: 78px;
+  font-size: 90px;
 }
 
 /* レスポンシブ: ヘッダーのフォントサイズ */
 @media (max-width: 1024px) {
   header #today {
-    font-size: 26px;
+    font-size: 30px;
   }
 
   header #todayTime {
-    font-size: 64px;
+    font-size: 74px;
   }
 }
 
 @media (max-width: 768px) {
   header #today {
-    font-size: 22px;
+    font-size: 26px;
   }
 
   header #todayTime {
-    font-size: 48px;
+    font-size: 56px;
   }
 }
 
 @media (max-width: 480px) {
   header #today {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   header #todayTime {
-    font-size: 38px;
+    font-size: 44px;
   }
 }
 
@@ -70,62 +70,74 @@ ul {
 
 header {
   text-align: center;
-  padding: 16px;
+  /* 管理者ボタン分の上余白を確保しつつ、下は詰める */
+  padding: 64px 16px 0;
   position: relative;
   max-width: 1100px;
-  margin: 16px auto 0;
-  background: rgba(255, 255, 255, 0.65);
-  border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(6px);
+  /* 時間の下に24px空ける */
+  margin: 16px auto 24px;
+  /* 背景は消して、文字だけ見せる */
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  /* 時刻の直下に次の要素が来るように（高さ固定/中央寄せをやめる） */
+  min-height: auto;
+  display: block;
 }
 
 /* レスポンシブ: ヘッダーのパディング */
 @media (max-width: 768px) {
   header {
-    padding: 12px;
-    margin: 12px auto 0;
+    padding: 56px 12px 0;
+    margin: 12px auto 24px;
+    min-height: auto;
   }
 }
 
 @media (max-width: 480px) {
   header {
-    padding: 8px;
-    margin: 10px auto 0;
+    padding: 52px 10px 0;
+    margin: 10px auto 24px;
+    min-height: auto;
   }
 }
 
-.admin-link {
-  /* 右上固定でも、押しやすい余白を確保 */
-  line-height: 1.2;
-}
+/* （一つ前に戻す）管理者リンクはヘッダー内の右上 */
 
 header #todayTime {
   line-height: 1.05;
   letter-spacing: 0.02em;
 }
 
+/* （時刻の直下に合わせるため）上方向のズラしは無し */
+header #today,
+header #todayTime {
+  transform: none;
+}
+
 main {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 16px;
+  /* 時刻(ヘッダー)との間を少し詰める */
+  padding: 0 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
   main {
-    padding: 12px;
-    gap: 12px;
+    padding: 0 12px 12px;
+    gap: 10px;
   }
 }
 
 @media (max-width: 480px) {
   main {
-    padding: 10px;
-    gap: 10px;
+    padding: 0 10px 10px;
+    gap: 8px;
   }
 }
 
@@ -351,19 +363,20 @@ main .names li:active {
 
 
 .timer {
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(0, 0, 0, 0.18);
   border-radius: 16px;
   margin: 0;
   width: 100%;
   padding: 16px;
   box-sizing: border-box;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  /* 影と境界線を見やすく */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
 }
 
 .timer ul {
   overflow: auto;
   /* 履歴を見やすく：画面に応じて大きめに可変 */
-  height: clamp(240px, 32vh, 520px);
+  height: clamp(330px, 38vh, 670px);
 }
 
 /* レスポンシブ: タイマーセクション */
@@ -373,7 +386,7 @@ main .names li:active {
   }
 
   .timer ul {
-    height: clamp(220px, 30vh, 480px);
+    height: clamp(310px, 36vh, 610px);
   }
 }
 
@@ -383,7 +396,7 @@ main .names li:active {
   }
 
   .timer ul {
-    height: clamp(200px, 28vh, 420px);
+    height: clamp(290px, 34vh, 570px);
   }
 }
 
@@ -393,7 +406,7 @@ main .names li:active {
   }
 
   .timer ul {
-    height: clamp(180px, 26vh, 360px);
+    height: clamp(270px, 32vh, 510px);
   }
 }
 
@@ -804,7 +817,7 @@ main .names li:active {
   }
 
   .timer ul {
-    height: clamp(160px, 32vh, 320px);
+    height: clamp(250px, 40vh, 470px);
   }
 
   #intime {
