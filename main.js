@@ -26,19 +26,49 @@ let pendingAction = null; // 保留中の操作（確認待ちの関数）
 // 社員リスト管理
 const EMPLOYEE_LIST_KEY = 'employeeList';
 
+const DEFAULT_EMPLOYEES = [
+  '山田 太郎（営業）',
+  '佐藤 花子（総務）',
+  '鈴木 一郎（開発）',
+  '高橋 美咲（開発）',
+  '田中 健（人事）',
+  '伊藤 彩（経理）',
+  '渡辺 直樹（営業）',
+  '山本 未来（サポート）',
+  '中村 陽菜（企画）',
+  '小林 大輔（開発）',
+  '加藤 玲奈（デザイン）',
+  '吉田 恒一（営業）',
+  '山口 さくら（広報）',
+  '松本 亮（開発）',
+  '井上 愛（総務）',
+  '木村 翔（開発）',
+  '林 優（経理）',
+  '清水 由紀（人事）',
+  '斎藤 海斗（開発）',
+  '阿部 まどか（企画）',
+  '橋本 慶（営業）',
+  '池田 亜美（サポート）',
+  '石井 健太（開発）',
+  '森川 奈々（デザイン）'
+];
+
 const getEmployeeList = () => {
   const stored = localStorage.getItem(EMPLOYEE_LIST_KEY);
   if (stored) {
-    return JSON.parse(stored);
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch (_) {
+      // 破損している場合はデフォルトを再投入
+    }
   }
-  // デフォルトの社員リスト（初回のみ）
-  const defaultEmployees = [
-    '畠山 太郎', '佐藤 次郎', '田中 三子', '鈴木 四郎', '山田 花子',
-    '高橋 五郎', '伊藤 六美', '渡辺 七海', '中村 八重', '小林 九男',
-    '加藤 十香', '吉田 十一', '山本 十二'
-  ];
-  localStorage.setItem(EMPLOYEE_LIST_KEY, JSON.stringify(defaultEmployees));
-  return defaultEmployees;
+
+  // デフォルトの社員リスト（初回 or 空/破損時）
+  localStorage.setItem(EMPLOYEE_LIST_KEY, JSON.stringify(DEFAULT_EMPLOYEES));
+  return DEFAULT_EMPLOYEES;
 };
 
 // 社員リストを表示
@@ -97,6 +127,66 @@ intime.addEventListener('click', () => {
 })
 
 timers = JSON.parse(localStorage.getItem('timers')) || [];
+
+// デモ用の打刻履歴を数日分生成（既存が空のときだけ）
+const DEMO_TIMERS_SEEDED_KEY = 'demoTimersSeeded';
+const seedDemoTimersIfEmpty = () => {
+  if (timers.length > 0) return;
+  if (localStorage.getItem(DEMO_TIMERS_SEEDED_KEY) === '1') return;
+
+  const employees = getEmployeeList().slice(0, 8);
+  const dates = [];
+  const d = new Date();
+
+  // 直近10営業日（当日含む、土日除外）
+  while (dates.length < 10) {
+    const day = d.getDay();
+    if (day !== 0 && day !== 6) {
+      dates.push(d.toISOString().slice(0, 10));
+    }
+    d.setDate(d.getDate() - 1);
+  }
+
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const toTimeStr = (minutes) => {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${pad2(h)} : ${pad2(m)}`;
+  };
+
+  const demoTimers = [];
+
+  dates.forEach((dateStr, dayIdx) => {
+    employees.forEach((name, empIdx) => {
+      // 09:00±10分
+      const inOffset = ((empIdx * 3 + dayIdx * 5) % 21) - 10;
+      const inMin = 9 * 60 + inOffset;
+
+      // 18:00〜19:30 くらい（たまに残業）
+      const baseOut = 18 * 60;
+      const outOffset = (empIdx * 7 + dayIdx * 11) % 91; // 0..90
+      const outMin = Math.max(inMin + 8 * 60 + 10, baseOut + outOffset);
+
+      demoTimers.push(
+        { name, text: '出勤', time: toTimeStr(inMin), date: dateStr },
+        { name, text: '退勤', time: toTimeStr(outMin), date: dateStr }
+      );
+    });
+  });
+
+  demoTimers.sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    if (a.name !== b.name) return a.name < b.name ? -1 : 1;
+    if (a.text !== b.text) return a.text === '退勤' ? -1 : 1;
+    return a.time < b.time ? 1 : -1;
+  });
+
+  timers = demoTimers;
+  setTimers();
+  localStorage.setItem(DEMO_TIMERS_SEEDED_KEY, '1');
+};
+
+seedDemoTimersIfEmpty();
 
 const setTimers = () => {
   localStorage.setItem('timers', JSON.stringify(timers));

@@ -8,6 +8,7 @@ const DEFAULT_PASSWORD = "0000"; // デフォルトパスワード
 const passwordOverlay = document.querySelector('#passwordOverlay');
 const passwordInput = document.querySelector('#passwordInput');
 const passwordSubmit = document.querySelector('#passwordSubmit');
+const passwordBack = document.querySelector('#passwordBack');
 const passwordError = document.querySelector('#passwordError');
 const mainHeader = document.querySelector('#mainHeader');
 const mainContent = document.querySelector('#mainContent');
@@ -21,6 +22,11 @@ const dateFilter = document.querySelector('#dateFilter');
 const totalWorkHoursEl = document.querySelector('#totalWorkHours');
 const totalOvertimeHoursEl = document.querySelector('#totalOvertimeHours');
 const avgWorkHoursEl = document.querySelector('#avgWorkHours');
+const monthlyReportText = document.querySelector('#monthlyReportText');
+const reportGenerateBtn = document.querySelector('#reportGenerateBtn');
+const reportCopyBtn = document.querySelector('#reportCopyBtn');
+const reportDownloadCsvBtn = document.querySelector('#reportDownloadCsvBtn');
+const reportMessage = document.querySelector('#reportMessage');
 
 // 設定画面の要素（存在チェック用）
 const currentPasswordInput = document.querySelector('#currentPassword');
@@ -49,23 +55,57 @@ if (isTimeManagementPage) {
 
 // データ取得
 let timers = JSON.parse(localStorage.getItem('timers')) || [];
+const setTimers = () => {
+  localStorage.setItem('timers', JSON.stringify(timers));
+};
 
 // 社員リスト管理
 const EMPLOYEE_LIST_KEY = 'employeeList';
+const DEMO_TIMERS_SEEDED_KEY = 'demoTimersSeeded';
+
+const DEFAULT_EMPLOYEES = [
+  '山田 太郎（営業）',
+  '佐藤 花子（総務）',
+  '鈴木 一郎（開発）',
+  '高橋 美咲（開発）',
+  '田中 健（人事）',
+  '伊藤 彩（経理）',
+  '渡辺 直樹（営業）',
+  '山本 未来（サポート）',
+  '中村 陽菜（企画）',
+  '小林 大輔（開発）',
+  '加藤 玲奈（デザイン）',
+  '吉田 恒一（営業）',
+  '山口 さくら（広報）',
+  '松本 亮（開発）',
+  '井上 愛（総務）',
+  '木村 翔（開発）',
+  '林 優（経理）',
+  '清水 由紀（人事）',
+  '斎藤 海斗（開発）',
+  '阿部 まどか（企画）',
+  '橋本 慶（営業）',
+  '池田 亜美（サポート）',
+  '石井 健太（開発）',
+  '森川 奈々（デザイン）'
+];
 
 const getEmployeeList = () => {
   const stored = localStorage.getItem(EMPLOYEE_LIST_KEY);
   if (stored) {
-    return JSON.parse(stored);
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch (_) {
+      // 破損している場合はデフォルトを再投入
+    }
   }
-  // デフォルトの社員リスト（初回のみ）
-  const defaultEmployees = [
-    '畠山 太郎', '佐藤 次郎', '田中 三子', '鈴木 四郎', '山田 花子',
-    '高橋 五郎', '伊藤 六美', '渡辺 七海', '中村 八重', '小林 九男',
-    '加藤 十香', '吉田 十一', '山本 十二'
-  ];
-  setEmployeeList(defaultEmployees);
-  return defaultEmployees;
+
+  // デフォルトの社員リスト（初回 or 空/破損時）
+  setEmployeeList(DEFAULT_EMPLOYEES);
+  return DEFAULT_EMPLOYEES;
 };
 
 const setEmployeeList = (employees) => {
@@ -73,6 +113,72 @@ const setEmployeeList = (employees) => {
   // index.htmlの社員リストも更新するため、イベントを発火
   window.dispatchEvent(new CustomEvent('employeeListUpdated', { detail: employees }));
 };
+
+// 画面表示用の社員名リスト（設定の社員リストを優先）
+const getEmployeeNames = () => {
+  return getActiveEmployeeList();
+};
+
+// デモ用の打刻履歴を数日分生成（既存が空のときだけ）
+const seedDemoTimersIfEmpty = () => {
+  if (timers.length > 0) return;
+  if (localStorage.getItem(DEMO_TIMERS_SEEDED_KEY) === '1') return;
+
+  const employees = getEmployeeList().slice(0, 8);
+  const dates = [];
+  const d = new Date();
+
+  // 直近10営業日（当日含む、土日除外）
+  while (dates.length < 10) {
+    const day = d.getDay();
+    if (day !== 0 && day !== 6) {
+      dates.push(d.toISOString().slice(0, 10));
+    }
+    d.setDate(d.getDate() - 1);
+  }
+
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const toTimeStr = (minutes) => {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${pad2(h)} : ${pad2(m)}`;
+  };
+
+  const demoTimers = [];
+
+  dates.forEach((dateStr, dayIdx) => {
+    employees.forEach((name, empIdx) => {
+      // 09:00±10分
+      const inOffset = ((empIdx * 3 + dayIdx * 5) % 21) - 10;
+      const inMin = 9 * 60 + inOffset;
+
+      // 18:00〜19:30 くらい（たまに残業）
+      const baseOut = 18 * 60;
+      const outOffset = (empIdx * 7 + dayIdx * 11) % 91; // 0..90
+      const outMin = Math.max(inMin + 8 * 60 + 10, baseOut + outOffset);
+
+      demoTimers.push(
+        { name, text: '出勤', time: toTimeStr(inMin), date: dateStr },
+        { name, text: '退勤', time: toTimeStr(outMin), date: dateStr }
+      );
+    });
+  });
+
+  // 新しい順に見せたいので、日付降順・退勤→出勤の順で並べる
+  demoTimers.sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    if (a.name !== b.name) return a.name < b.name ? -1 : 1;
+    // 退勤を先に
+    if (a.text !== b.text) return a.text === '退勤' ? -1 : 1;
+    return a.time < b.time ? 1 : -1;
+  });
+
+  timers = demoTimers;
+  localStorage.setItem('timers', JSON.stringify(timers));
+  localStorage.setItem(DEMO_TIMERS_SEEDED_KEY, '1');
+};
+
+seedDemoTimersIfEmpty();
 
 // 社員名リストを取得（打刻データから）
 const getEmployeeNamesFromTimers = () => {
@@ -181,6 +287,92 @@ const getEmployeeMonthlySummary = (employeeName, yearMonth) => {
   };
 };
 
+const pad2 = (n) => String(n).padStart(2, '0');
+const minutesToHHMM = (minutes) => {
+  const m = Math.max(0, Math.floor(Number(minutes) || 0));
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  return `${pad2(h)}:${pad2(mm)}`;
+};
+
+const buildMonthlyReportRows = (yearMonth) => {
+  const employees = getEmployeeNames();
+  const rows = [];
+
+  employees.forEach((name) => {
+    const summary = getEmployeeMonthlySummary(name, yearMonth);
+    summary.dailyData.forEach((day) => {
+      rows.push({
+        month: yearMonth,
+        name,
+        date: day.date,
+        checkIn: day.checkIn?.time || '',
+        checkOut: day.checkOut?.time || '',
+        work: minutesToHHMM(day.workMinutes),
+        overtime: minutesToHHMM(day.overtimeMinutes)
+      });
+    });
+  });
+
+  // Excelで見やすいように、社員名→日付の順で並べる
+  rows.sort((a, b) => {
+    if (a.name !== b.name) return a.name < b.name ? -1 : 1;
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return 0;
+  });
+
+  return rows;
+};
+
+const buildMonthlyReportTsv = (yearMonth) => {
+  const rows = buildMonthlyReportRows(yearMonth);
+  const lines = [];
+
+  // そのままExcelに貼れる「表」だけにする
+  lines.push(['月', '社員名', '日付', '出勤', '退勤', '労働(HH:MM)', '残業(HH:MM)'].join('\t'));
+  rows.forEach((r) => {
+    lines.push([r.month, r.name, r.date, r.checkIn, r.checkOut, r.work, r.overtime].join('\t'));
+  });
+
+  return lines.join('\n');
+};
+
+const buildMonthlyReportCsv = (yearMonth) => {
+  const rows = buildMonthlyReportRows(yearMonth);
+
+  const escapeCsv = (value) => {
+    const s = String(value ?? '');
+    // Excel向け: 必ずダブルクォートで囲う（改行/カンマ対策）
+    return `"${s.replace(/"/g, '""')}"`;
+  };
+
+  const header = ['月', '社員名', '日付', '出勤', '退勤', '労働(HH:MM)', '残業(HH:MM)'];
+  const lines = [header.map(escapeCsv).join(',')];
+  rows.forEach((r) => {
+    lines.push([r.month, r.name, r.date, r.checkIn, r.checkOut, r.work, r.overtime].map(escapeCsv).join(','));
+  });
+
+  // Windows Excelでの貼り付け/改行を安定させる
+  return lines.join('\r\n');
+};
+
+const setReportMessage = (text, color = '#28a745') => {
+  if (!reportMessage) return;
+  reportMessage.style.color = color;
+  reportMessage.textContent = text;
+  if (text) {
+    setTimeout(() => {
+      reportMessage.textContent = '';
+    }, 2500);
+  }
+};
+
+const renderMonthlyReport = () => {
+  if (!isTimeManagementPage || !monthlyReportText) return;
+  const yearMonth = monthSelect.value;
+  monthlyReportText.value = buildMonthlyReportTsv(yearMonth);
+};
+
 // 全体の月間サマリーを計算
 const calculateMonthlySummary = (yearMonth) => {
   const employees = getEmployeeNamesFromTimers();
@@ -287,19 +479,85 @@ const renderDetailTable = (yearMonth, employeeName = 'all', date = '') => {
       const overtimeMinutes = Math.max(0, workMinutes - normalMinutes);
       const overtimeHours = overtimeMinutes / 60;
 
+      const inValue = day.checkIn.time.replace(' : ', ':');
+      const outValue = day.checkOut.time.replace(' : ', ':');
+      const inOld = day.checkIn.time;
+      const outOld = day.checkOut.time;
+
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${day.date}</td>
         <td>${day.name}</td>
-        <td>${day.checkIn.time}</td>
-        <td>${day.checkOut.time}</td>
+        <td><input class="detail-time-input" type="time" value="${inValue}" /></td>
+        <td><input class="detail-time-input" type="time" value="${outValue}" /></td>
         <td>${workHours.toFixed(1)}時間</td>
         <td class="${overtimeHours > 0 ? 'overtime' : ''}">${overtimeHours.toFixed(1)}時間</td>
+        <td><button class="detail-save-btn" type="button" data-date="${day.date}" data-name="${day.name}" data-in-old="${inOld}" data-out-old="${outOld}">保存</button></td>
       `;
       detailTableBody.appendChild(row);
     }
   });
 };
+
+// 詳細テーブルで出勤/退勤時刻を編集
+if (isTimeManagementPage && detailTableBody) {
+  const toStoredTime = (timeHHMM) => {
+    // "09:05" -> "09 : 05"
+    const [h, m] = String(timeHHMM).split(':');
+    if (!h || !m) return '';
+    return `${h.padStart(2, '0')} : ${m.padStart(2, '0')}`;
+  };
+
+  const findTimerIndex = (date, name, text, oldTime) => {
+    // まずは「元の時刻」まで一致するものを優先
+    const exact = timers.findIndex(t => t.date === date && t.name === name && t.text === text && t.time === oldTime);
+    if (exact !== -1) return exact;
+    // 次に date/name/text だけで（重複がある場合は先頭を更新）
+    return timers.findIndex(t => t.date === date && t.name === name && t.text === text);
+  };
+
+  detailTableBody.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!target.classList.contains('detail-save-btn')) return;
+
+    const btn = target;
+    const row = btn.closest('tr');
+    if (!row) return;
+
+    const date = btn.dataset.date || '';
+    const name = btn.dataset.name || '';
+    const inOld = btn.dataset.inOld || '';
+    const outOld = btn.dataset.outOld || '';
+
+    const inputs = row.querySelectorAll('input.detail-time-input');
+    const inInput = inputs[0];
+    const outInput = inputs[1];
+    if (!inInput || !outInput) return;
+
+    const inNew = toStoredTime(inInput.value);
+    const outNew = toStoredTime(outInput.value);
+    if (!date || !name || !inNew || !outNew) return;
+
+    const inIdx = findTimerIndex(date, name, '出勤', inOld);
+    const outIdx = findTimerIndex(date, name, '退勤', outOld);
+
+    if (inIdx === -1 || outIdx === -1) {
+      alert('更新対象のデータが見つかりませんでした（データの形式が想定と違う可能性があります）');
+      return;
+    }
+
+    timers[inIdx] = { ...timers[inIdx], time: inNew };
+    timers[outIdx] = { ...timers[outIdx], time: outNew };
+    setTimers();
+
+    // 再計算＆再描画
+    const yearMonth = monthSelect.value;
+    renderSummary(yearMonth);
+    renderEmployeeList(yearMonth);
+    renderDetailTable(yearMonth, employeeFilter.value, dateFilter.value);
+  });
+}
 
 // 社員フィルターのオプションを更新
 const updateEmployeeFilter = () => {
@@ -346,6 +604,17 @@ passwordInput.addEventListener('keypress', (e) => {
     passwordSubmit.click();
   }
 });
+
+// パスワード画面から前の画面へ戻る
+if (passwordBack) {
+  passwordBack.addEventListener('click', () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = 'index.html';
+    }
+  });
+}
 
 // パスワード変更機能（設定画面のみ）
 if (isSettingsPage && changePasswordBtn) {
@@ -520,7 +789,8 @@ const showMainContent = () => {
     const yearMonth = monthSelect.value;
     renderSummary(yearMonth);
     renderEmployeeList(yearMonth);
-    renderDetailTable(yearMonth);
+    renderDetailTable(yearMonth, employeeFilter.value, dateFilter.value);
+    renderMonthlyReport();
   }
 
   // 設定画面の場合
@@ -539,6 +809,7 @@ if (isTimeManagementPage) {
         renderSummary(yearMonth);
         renderEmployeeList(yearMonth);
         renderDetailTable(yearMonth, employeeFilter.value, dateFilter.value);
+        renderMonthlyReport();
       });
     }
 
@@ -556,4 +827,66 @@ if (isTimeManagementPage) {
   };
 
   init();
+}
+
+// レポート生成/コピー
+if (isTimeManagementPage) {
+  if (reportGenerateBtn) {
+    reportGenerateBtn.addEventListener('click', () => {
+      renderMonthlyReport();
+      setReportMessage('生成しました');
+    });
+  }
+
+  if (reportCopyBtn && monthlyReportText) {
+    reportCopyBtn.addEventListener('click', async () => {
+      const text = monthlyReportText.value || '';
+      if (!text) {
+        setReportMessage('先に生成してください', '#e74c3c');
+        return;
+      }
+
+      // Clipboard API が使えない（file:// 等）環境向けにフォールバック
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          await navigator.clipboard.writeText(text);
+          setReportMessage('コピーしました');
+          return;
+        }
+      } catch (_) {
+        // フォールバックへ
+      }
+
+      monthlyReportText.focus();
+      monthlyReportText.select();
+      try {
+        const ok = document.execCommand('copy');
+        setReportMessage(ok ? 'コピーしました' : 'コピーに失敗しました', ok ? '#28a745' : '#e74c3c');
+      } catch (_) {
+        setReportMessage('コピーに失敗しました', '#e74c3c');
+      }
+    });
+  }
+
+  if (reportDownloadCsvBtn) {
+    reportDownloadCsvBtn.addEventListener('click', () => {
+      const yearMonth = monthSelect.value;
+      const csv = buildMonthlyReportCsv(yearMonth);
+
+      // 日本語が文字化けしにくいように UTF-8 BOM を付与
+      const bom = '\uFEFF';
+      const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `月次レポート_${yearMonth}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setReportMessage('CSVをダウンロードしました');
+    });
+  }
 }

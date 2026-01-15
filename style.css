@@ -2,7 +2,16 @@
 
 body {
   margin: 0;
-  background: #cedbec
+  background: #cedbec;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  color: #111;
+}
+
+/* タッチデバイス向けの最適化 */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1,
@@ -15,11 +24,42 @@ p {
 }
 
 header #today {
-  font-size: 24px;
+  font-size: 30px;
 }
 
 header #todayTime {
-  font-size: 60px;
+  font-size: 78px;
+}
+
+/* レスポンシブ: ヘッダーのフォントサイズ */
+@media (max-width: 1024px) {
+  header #today {
+    font-size: 26px;
+  }
+
+  header #todayTime {
+    font-size: 64px;
+  }
+}
+
+@media (max-width: 768px) {
+  header #today {
+    font-size: 22px;
+  }
+
+  header #todayTime {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  header #today {
+    font-size: 18px;
+  }
+
+  header #todayTime {
+    font-size: 38px;
+  }
 }
 
 ul {
@@ -32,6 +72,61 @@ header {
   text-align: center;
   padding: 16px;
   position: relative;
+  max-width: 1100px;
+  margin: 16px auto 0;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+/* レスポンシブ: ヘッダーのパディング */
+@media (max-width: 768px) {
+  header {
+    padding: 12px;
+    margin: 12px auto 0;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 8px;
+    margin: 10px auto 0;
+  }
+}
+
+.admin-link {
+  /* 右上固定でも、押しやすい余白を確保 */
+  line-height: 1.2;
+}
+
+header #todayTime {
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 12px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 10px;
+    gap: 10px;
+  }
 }
 
 .admin-link {
@@ -49,6 +144,25 @@ header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* レスポンシブ: 管理者リンク */
+@media (max-width: 768px) {
+  .admin-link {
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-link {
+    top: 8px;
+    right: 8px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
+
 .admin-link:hover {
   background: #667eea;
   color: #fff;
@@ -64,19 +178,60 @@ header {
 
 #intime {
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 50%;
   margin: 0 auto;
-  padding: 16px;
-  font-size: 24px;
-  border: 1px solid #000;
-  border-radius: 8px;
+  padding: 22px 16px;
+  font-size: 20px;
+  font-weight: 700;
+  border: 2px solid rgba(0, 0, 0, 0.18);
+  border-radius: 14px;
   box-sizing: border-box;
   background: #fff;
   cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* レスポンシブ: 打刻ボタン */
+@media (max-width: 1024px) {
+  #intime {
+    width: 60%;
+    font-size: 22px;
+    padding: 20px 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  #intime {
+    width: 70%;
+    font-size: 20px;
+    padding: 18px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  #intime {
+    width: 85%;
+    font-size: 18px;
+    padding: 16px 12px;
+  }
 }
 
 #intime:active {
   opacity: .6;
+}
+
+/* タッチデバイス向けの最適化 */
+@media (hover: none) and (pointer: coarse) {
+  #intime {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  #intime:active {
+    transform: scale(0.98);
+  }
 }
 
 .overlay-names {
@@ -107,6 +262,34 @@ header {
   padding: 24px;
   box-sizing: border-box;
   margin-bottom: 80px;
+}
+
+/* レスポンシブ: 社員一覧モーダル */
+@media (max-width: 1024px) {
+  .names {
+    width: 92%;
+    max-height: 65vh;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .names {
+    width: 95%;
+    max-height: 70vh;
+    padding: 16px;
+    margin-bottom: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .names {
+    width: 98%;
+    max-height: 75vh;
+    padding: 12px;
+    margin-bottom: 120px;
+    border-radius: 12px;
+  }
 }
 
 .names.correct {
@@ -158,18 +341,60 @@ main .names li:active {
   opacity: .6;
 }
 
+/* タッチデバイス向けの最適化 */
+@media (hover: none) and (pointer: coarse) {
+  main .names li:active {
+    transform: scale(0.95);
+  }
+}
+
 
 
 .timer {
-  border: 1px solid;
-  border-radius: 8px;
-  margin: 32px auto;
-  width: 80%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+  margin: 0;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
 .timer ul {
   overflow: auto;
-  height: 200px;
+  /* 履歴を見やすく：画面に応じて大きめに可変 */
+  height: clamp(240px, 32vh, 520px);
+}
+
+/* レスポンシブ: タイマーセクション */
+@media (max-width: 1024px) {
+  .timer {
+    padding: 14px;
+  }
+
+  .timer ul {
+    height: clamp(220px, 30vh, 480px);
+  }
+}
+
+@media (max-width: 768px) {
+  .timer {
+    padding: 12px;
+  }
+
+  .timer ul {
+    height: clamp(200px, 28vh, 420px);
+  }
+}
+
+@media (max-width: 480px) {
+  .timer {
+    padding: 10px;
+  }
+
+  .timer ul {
+    height: clamp(180px, 26vh, 360px);
+  }
 }
 
 .timer h2 {
@@ -321,6 +546,24 @@ main .names li:active {
   align-items: center;
 }
 
+/* レスポンシブ: タイマーリストのレイアウト */
+@media (max-width: 768px) {
+  .timer li {
+    grid-template-columns: 1.5fr 1fr 1fr auto;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    font-size: 12px;
+    text-align: left;
+    padding-left: 8px;
+  }
+}
+
 .timer-type::before {
   content: '【';
 }
@@ -337,7 +580,33 @@ main .names li:active {
   margin: 8px;
 }
 
-/* レスポンシブ対応 */
+/* レスポンシブ対応: タブレット */
+@media (max-width: 1024px) and (min-width: 769px) {
+  main .names ul {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    padding: 14px;
+  }
+
+  main .names li {
+    font-size: 17px;
+    padding: 11px 7px;
+  }
+
+  .modal {
+    width: 85%;
+    max-width: 450px;
+    padding: 28px 20px;
+  }
+
+  .modal li {
+    padding: 18px 32px;
+    font-size: 17px;
+    min-width: 110px;
+  }
+}
+
+/* レスポンシブ対応: スマホ（小） */
 @media (max-width: 768px) {
   main .names ul {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -447,9 +716,23 @@ main .names li:active {
   box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
+/* レスポンシブ対応: スマホ（超小） */
 @media (max-width: 480px) {
   main .names ul {
     grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    padding: 8px;
+  }
+
+  main .names li {
+    font-size: 14px;
+    padding: 8px 4px;
+  }
+
+  .modal {
+    width: 98%;
+    padding: 20px 12px;
+    margin-bottom: 100px;
   }
 
   .modal ul {
@@ -459,6 +742,8 @@ main .names li:active {
 
   .modal li {
     width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
   }
 
   .close-button {
@@ -471,14 +756,87 @@ main .names li:active {
   }
 
   .confirm-modal {
-    padding: 24px;
+    padding: 24px 16px;
+    width: 95%;
+  }
+
+  .confirm-modal h3 {
+    font-size: 20px;
+  }
+
+  .confirm-modal p {
+    font-size: 14px;
   }
 
   .confirm-buttons {
     flex-direction: column;
+    gap: 10px;
   }
 
   .confirm-btn {
     width: 100%;
+    padding: 10px 24px;
+    font-size: 15px;
+  }
+}
+
+/* ランドスケープモード（横画面）の最適化 */
+@media (max-width: 768px) and (orientation: landscape) {
+  header {
+    padding: 8px;
+  }
+
+  header #today {
+    font-size: 18px;
+  }
+
+  header #todayTime {
+    font-size: 38px;
+  }
+
+  .names {
+    max-height: 80vh;
+    padding: 16px;
+  }
+
+  .timer {
+    margin: 12px auto;
+  }
+
+  .timer ul {
+    height: clamp(160px, 32vh, 320px);
+  }
+
+  #intime {
+    width: 60%;
+    padding: 14px 16px;
+    font-size: 18px;
+    margin: 12px auto;
+  }
+
+  .modal {
+    padding: 20px 16px;
+    margin-bottom: 60px;
+  }
+
+  .close-button {
+    bottom: 15px;
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
+/* PC向けの最適化（大画面） */
+@media (min-width: 1440px) {
+  .names {
+    max-width: 1400px;
+  }
+
+  .timer {
+    max-width: 1200px;
+  }
+
+  #intime {
+    max-width: 600px;
   }
 }

@@ -322,6 +322,41 @@ section h2 {
   border-bottom: 1px solid #e9ecef;
 }
 
+.detail-time-input {
+  width: 110px;
+  padding: 6px 10px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.detail-time-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.detail-save-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #667eea;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.detail-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.35);
+}
+
+.detail-save-btn:active {
+  transform: translateY(0);
+}
+
 .detail-table tbody tr:hover {
   background: #f8f9fa;
 }
@@ -329,6 +364,62 @@ section h2 {
 .detail-table td.overtime {
   color: #e74c3c;
   font-weight: 600;
+}
+
+/* 月次レポート（コピー用） */
+.report-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.report-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #667eea;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.report-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(102, 126, 234, 0.35);
+}
+
+.report-btn:active {
+  transform: translateY(0);
+}
+
+.report-btn-secondary {
+  background: #6c757d;
+}
+
+.report-message {
+  font-size: 14px;
+  color: #28a745;
+  min-height: 18px;
+}
+
+.report-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  background: #fff;
+  resize: vertical;
+}
+
+.report-textarea:focus {
+  outline: none;
+  border-color: #667eea;
 }
 
 /* レスポンシブ対応 */
@@ -374,6 +465,15 @@ section h2 {
   .detail-table th,
   .detail-table td {
     padding: 8px;
+  }
+
+  .detail-time-input {
+    width: 100%;
+    min-width: 90px;
+  }
+
+  .report-textarea {
+    font-size: 12px;
   }
 }
 
@@ -454,6 +554,29 @@ section h2 {
 }
 
 .password-submit-btn:active {
+  transform: translateY(0);
+}
+
+.password-back-btn {
+  width: 100%;
+  padding: 12px 24px;
+  margin-top: 10px;
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.password-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.password-back-btn:active {
   transform: translateY(0);
 }
 
