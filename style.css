@@ -484,6 +484,7 @@ main .names li:active {
   border: none;
   border-radius: 16px;
   padding: 32px 24px;
+  box-sizing: border-box;
   opacity: 0;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -507,6 +508,7 @@ main .names li:active {
   justify-content: center;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 .modal li {
@@ -520,6 +522,8 @@ main .names li:active {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   min-width: 120px;
   text-align: center;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 #check-in {
@@ -554,7 +558,7 @@ main .names li:active {
 
 .timer li {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr auto;
+  grid-template-columns: 2fr 1fr 1fr;
   text-align: center;
   align-items: center;
 }
@@ -562,18 +566,19 @@ main .names li:active {
 /* レスポンシブ: タイマーリストのレイアウト */
 @media (max-width: 768px) {
   .timer li {
-    grid-template-columns: 1.5fr 1fr 1fr auto;
+    grid-template-columns: 1.5fr 1fr 1fr;
     font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
+  /* スマホでもPCと同じ並び（名前・種別・時刻）にする */
   .timer li {
-    grid-template-columns: 1fr;
-    gap: 4px;
-    font-size: 12px;
-    text-align: left;
-    padding-left: 8px;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    font-size: 13px;
+    text-align: center;
+    gap: 0;
+    padding-left: 0;
   }
 }
 

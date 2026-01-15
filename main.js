@@ -75,7 +75,7 @@ const getEmployeeList = () => {
 const renderEmployeeList = () => {
   const employees = getEmployeeList();
   namesList.innerHTML = '';
-  
+
   employees.forEach(employeeName => {
     const li = document.createElement('li');
     li.textContent = employeeName;
