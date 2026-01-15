@@ -61,7 +61,7 @@
 
 ## 技術仕様
 
-- **フロントエンド**: HTML, CSS, JavaScript
+- **フロントエンド**: HTML5, CSS3, JavaScript (Vanilla JS)
 - **データ保存**: LocalStorage
 - **レスポンシブ対応**: 1024px / 768px / 480px のブレークポイント
 - **ブラウザ対応**: モダンブラウザ（Chrome, Firefox, Safari, Edge）

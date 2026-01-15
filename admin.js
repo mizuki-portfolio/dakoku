@@ -405,38 +405,129 @@ const renderSummary = (yearMonth) => {
   avgWorkHoursEl.textContent = `${summary.avgWorkHours.toFixed(1)}時間`;
 };
 
-// 社員リストを表示
-const renderEmployeeList = (yearMonth) => {
-  const employees = getEmployeeNames();
-  employeeList.innerHTML = '';
+// 部署を抽出（例: "山田 太郎（営業）" -> "営業"）
+const extractDepartment = (employeeName) => {
+  const match = employeeName.match(/（(.+?)）/);
+  return match ? match[1] : 'その他';
+};
 
-  employees.forEach(name => {
-    const summary = getEmployeeMonthlySummary(name, yearMonth);
-    const card = document.createElement('div');
-    card.className = 'employee-card';
-    card.innerHTML = `
-      <div class="employee-name">${name}</div>
-      <div class="employee-stats">
-        <div class="stat-item">
-          <span class="stat-label">労働日数</span>
-          <span class="stat-value">${summary.workDays}日</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">総労働時間</span>
-          <span class="stat-value">${summary.totalWorkHours.toFixed(1)}時間</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">残業時間</span>
-          <span class="stat-value overtime">${summary.totalOvertimeHours.toFixed(1)}時間</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">平均労働時間/日</span>
-          <span class="stat-value">${summary.avgWorkHours.toFixed(1)}時間</span>
-        </div>
-      </div>
-    `;
-    employeeList.appendChild(card);
+// 部署一覧を取得
+const getDepartments = (employees) => {
+  const departments = new Set();
+  employees.forEach(emp => {
+    const dept = extractDepartment(emp);
+    departments.add(dept);
   });
+  return Array.from(departments).sort();
+};
+
+// 選択中の部署と社員名
+let selectedDepartment = null;
+let selectedEmployeeName = null;
+
+// 社員名リストを表示（部署別アコーディオン形式）
+const renderEmployeeNameList = (yearMonth) => {
+  const employees = getEmployeeNames();
+  const departments = getDepartments(employees);
+  const employeeNameList = document.querySelector('#employeeNameList');
+  if (!employeeNameList) return;
+  
+  employeeNameList.innerHTML = '';
+
+  departments.forEach(dept => {
+    const deptEmployees = employees.filter(emp => extractDepartment(emp) === dept);
+    const isDeptOpen = selectedDepartment === dept;
+    
+    // 部署アコーディオンアイテム
+    const deptAccordionItem = document.createElement('div');
+    deptAccordionItem.className = 'department-accordion-item';
+    
+    // 部署ヘッダー
+    const deptHeader = document.createElement('button');
+    deptHeader.className = 'department-accordion-header' + (isDeptOpen ? ' active' : '');
+    deptHeader.textContent = dept;
+    deptHeader.addEventListener('click', () => {
+      if (selectedDepartment === dept) {
+        selectedDepartment = null;
+        selectedEmployeeName = null;
+      } else {
+        selectedDepartment = dept;
+        selectedEmployeeName = null;
+      }
+      renderEmployeeNameList(yearMonth);
+    });
+    
+    // 部署の社員リスト
+    const deptContent = document.createElement('div');
+    deptContent.className = 'department-accordion-content' + (isDeptOpen ? ' active' : '');
+    
+    const employeeList = document.createElement('div');
+    employeeList.className = 'employee-list-in-dept';
+    
+    deptEmployees.forEach(name => {
+      const summary = getEmployeeMonthlySummary(name, yearMonth);
+      const isEmployeeOpen = selectedEmployeeName === name;
+      
+      const employeeItem = document.createElement('div');
+      employeeItem.className = 'employee-accordion-item';
+      
+      const nameButton = document.createElement('button');
+      nameButton.className = 'employee-accordion-header' + (isEmployeeOpen ? ' active' : '');
+      nameButton.textContent = name;
+      nameButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (selectedEmployeeName === name) {
+          selectedEmployeeName = null;
+        } else {
+          selectedEmployeeName = name;
+        }
+        renderEmployeeNameList(yearMonth);
+      });
+      
+      const detailContent = document.createElement('div');
+      detailContent.className = 'employee-accordion-content' + (isEmployeeOpen ? ' active' : '');
+      detailContent.innerHTML = `
+        <div class="employee-stats">
+          <div class="stat-item">
+            <span class="stat-label">労働日数</span>
+            <span class="stat-value">${summary.workDays}日</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">総労働時間</span>
+            <span class="stat-value">${summary.totalWorkHours.toFixed(1)}時間</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">残業時間</span>
+            <span class="stat-value overtime">${summary.totalOvertimeHours.toFixed(1)}時間</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">平均労働時間/日</span>
+            <span class="stat-value">${summary.avgWorkHours.toFixed(1)}時間</span>
+          </div>
+        </div>
+      `;
+      
+      employeeItem.appendChild(nameButton);
+      employeeItem.appendChild(detailContent);
+      employeeList.appendChild(employeeItem);
+    });
+    
+    deptContent.appendChild(employeeList);
+    deptAccordionItem.appendChild(deptHeader);
+    deptAccordionItem.appendChild(deptContent);
+    employeeNameList.appendChild(deptAccordionItem);
+  });
+};
+
+// 選択された社員の詳細を表示（後方互換性のため残す）
+const renderEmployeeDetail = (yearMonth) => {
+  // アコーディオン形式では使用しない
+};
+
+// 社員リストを表示（後方互換性のため残す）
+const renderEmployeeList = (yearMonth) => {
+  renderEmployeeNameList(yearMonth);
+  renderEmployeeDetail(yearMonth);
 };
 
 // 詳細テーブルを表示
@@ -777,6 +868,26 @@ if (hamburgerMenu && hamburgerNav) {
   });
 }
 
+// 目次のスムーズスクロール機能
+const initTableOfContents = () => {
+  const tocLinks = document.querySelectorAll('.toc-link');
+  tocLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        const headerHeight = document.querySelector('#mainHeader')?.offsetHeight || 0;
+        const targetPosition = targetElement.offsetTop - headerHeight - 20;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+};
+
 // パスワード認証成功時の処理
 const showMainContent = () => {
   passwordOverlay.style.display = 'none';
@@ -791,6 +902,7 @@ const showMainContent = () => {
     renderEmployeeList(yearMonth);
     renderDetailTable(yearMonth, employeeFilter.value, dateFilter.value);
     renderMonthlyReport();
+    initTableOfContents();
   }
 
   // 設定画面の場合
@@ -806,6 +918,8 @@ if (isTimeManagementPage) {
     if (monthSelect) {
       monthSelect.addEventListener('change', () => {
         const yearMonth = monthSelect.value;
+        selectedDepartment = null; // 月が変更されたら選択をリセット
+        selectedEmployeeName = null;
         renderSummary(yearMonth);
         renderEmployeeList(yearMonth);
         renderDetailTable(yearMonth, employeeFilter.value, dateFilter.value);
@@ -889,4 +1003,9 @@ if (isTimeManagementPage) {
       setReportMessage('CSVをダウンロードしました');
     });
   }
+}
+
+// 設定画面の場合はパスワード認証をスキップ
+if (isSettingsPage) {
+  showMainContent();
 }

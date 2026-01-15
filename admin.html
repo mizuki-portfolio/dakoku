@@ -44,7 +44,18 @@
   </header>
 
   <main id="mainContent" style="display: none;">
-    <section class="summary-section">
+    <!-- 目次 -->
+    <nav class="table-of-contents" id="tableOfContents">
+      <h3>目次</h3>
+      <ul>
+        <li><a href="#summary-section" class="toc-link">月間サマリー</a></li>
+        <li><a href="#employee-section" class="toc-link">社員別集計</a></li>
+        <li><a href="#detail-section" class="toc-link">詳細データ</a></li>
+        <li><a href="#report-section" class="toc-link">月次レポート</a></li>
+      </ul>
+    </nav>
+
+    <section class="summary-section" id="summary-section">
       <h2>月間サマリー</h2>
       <div class="summary-cards">
         <div class="summary-card">
@@ -62,14 +73,14 @@
       </div>
     </section>
 
-    <section class="employee-section">
+    <section class="employee-section" id="employee-section">
       <h2>社員別集計</h2>
-      <div class="employee-list" id="employeeList">
-        <!-- 社員データがここに表示されます -->
+      <div class="employee-accordion" id="employeeNameList">
+        <!-- 社員名リストがここに動的に読み込まれます -->
       </div>
     </section>
 
-    <section class="detail-section">
+    <section class="detail-section" id="detail-section">
       <h2>詳細データ</h2>
       <div class="detail-controls">
         <select id="employeeFilter">
@@ -97,7 +108,7 @@
       </div>
     </section>
 
-    <section class="report-section">
+    <section class="report-section" id="report-section">
       <h2>月次レポート（コピー用）</h2>
       <div class="report-controls">
         <button id="reportGenerateBtn" class="report-btn" type="button">生成</button>

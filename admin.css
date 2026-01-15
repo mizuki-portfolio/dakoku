@@ -158,6 +158,64 @@ main {
   max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
+  position: relative;
+}
+
+/* 目次 */
+.table-of-contents {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+}
+
+.table-of-contents h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #667eea;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 8px;
+}
+
+.table-of-contents ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.table-of-contents li {
+  margin: 0;
+}
+
+.table-of-contents .toc-link {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #f5f7fa;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.table-of-contents .toc-link:hover {
+  background: #667eea;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.table-of-contents .toc-link:active {
+  transform: translateY(0);
 }
 
 section {
@@ -166,6 +224,7 @@ section {
   padding: 24px;
   margin-bottom: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  scroll-margin-top: 100px;
 }
 
 section h2 {
@@ -241,6 +300,149 @@ section h2 {
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 2px solid #667eea;
+}
+
+/* 部署アコーディオン */
+.employee-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.department-accordion-item {
+  background: #fff;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.department-accordion-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.department-accordion-header {
+  width: 100%;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.department-accordion-header::after {
+  content: '▼';
+  font-size: 14px;
+  transition: transform 0.3s ease;
+  color: #fff;
+}
+
+.department-accordion-header.active {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.department-accordion-header.active::after {
+  transform: rotate(180deg);
+}
+
+.department-accordion-header:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.department-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0;
+}
+
+.department-accordion-content.active {
+  max-height: 2000px;
+  padding: 12px;
+}
+
+.employee-list-in-dept {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 社員アコーディオン（部署内） */
+.employee-accordion-item {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.employee-accordion-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.employee-accordion-header {
+  width: 100%;
+  padding: 14px 18px;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.employee-accordion-header::after {
+  content: '▼';
+  font-size: 11px;
+  transition: transform 0.3s ease;
+  color: #667eea;
+}
+
+.employee-accordion-header.active {
+  background: #667eea;
+  color: #fff;
+  font-weight: 600;
+}
+
+.employee-accordion-header.active::after {
+  transform: rotate(180deg);
+  color: #fff;
+}
+
+.employee-accordion-header:hover {
+  background: #e9ecef;
+}
+
+.employee-accordion-header.active:hover {
+  background: #5a67d8;
+}
+
+.employee-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 18px;
+}
+
+.employee-accordion-content.active {
+  max-height: 500px;
+  padding: 18px;
 }
 
 .employee-stats {
@@ -422,35 +624,126 @@ section h2 {
   border-color: #667eea;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
+/* レスポンシブ対応: タブレット（1024px以下） */
+@media (max-width: 1024px) {
+  main {
+    padding: 20px;
+  }
+
+  header {
+    padding: 20px;
+  }
+
   header h1 {
-    font-size: 24px;
+    font-size: 26px;
+  }
+
+  .summary-cards {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+}
+
+/* レスポンシブ対応: スマホ（768px以下） */
+@media (max-width: 768px) {
+  main {
+    padding: 16px;
+  }
+
+  header {
+    padding: 16px;
+  }
+
+  header h1 {
+    font-size: 22px;
   }
 
   .header-controls {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .table-of-contents {
+    padding: 16px;
+    position: relative;
+    top: 0;
+    margin-bottom: 20px;
+  }
+
+  .table-of-contents ul {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .table-of-contents .toc-link {
+    padding: 10px 16px;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
   }
 
   .hamburger-nav {
     width: 250px;
   }
 
+  section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  section h2 {
+    font-size: 20px;
+  }
+
   .summary-cards {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summary-card {
+    padding: 20px;
+  }
+
+  .card-value {
+    font-size: 28px;
   }
 
   .employee-list {
     grid-template-columns: 1fr;
   }
 
+  .employee-accordion {
+    gap: 10px;
+  }
+
+  .department-accordion-header {
+    padding: 16px 18px;
+    font-size: 16px;
+  }
+
+  .department-accordion-content.active {
+    padding: 10px;
+  }
+
+  .employee-accordion-header {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .employee-accordion-content.active {
+    padding: 16px;
+  }
+
   .employee-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .detail-controls {
     flex-direction: column;
+    gap: 12px;
   }
 
   .detail-controls select,
@@ -464,7 +757,7 @@ section h2 {
 
   .detail-table th,
   .detail-table td {
-    padding: 8px;
+    padding: 8px 6px;
   }
 
   .detail-time-input {
@@ -472,8 +765,132 @@ section h2 {
     min-width: 90px;
   }
 
+  .report-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .report-btn {
+    width: 100%;
+    padding: 12px 16px;
+  }
+
   .report-textarea {
     font-size: 12px;
+    padding: 10px;
+  }
+}
+
+/* レスポンシブ対応: スマホ小（480px以下） */
+@media (max-width: 480px) {
+  main {
+    padding: 12px;
+  }
+
+  header {
+    padding: 12px;
+  }
+
+  header h1 {
+    font-size: 20px;
+  }
+
+  .table-of-contents {
+    padding: 12px;
+  }
+
+  .table-of-contents h3 {
+    font-size: 16px;
+  }
+
+  .table-of-contents .toc-link {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  section {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  section h2 {
+    font-size: 18px;
+  }
+
+  .summary-card {
+    padding: 16px;
+  }
+
+  .card-label {
+    font-size: 13px;
+  }
+
+  .card-value {
+    font-size: 24px;
+  }
+
+  .employee-accordion {
+    gap: 8px;
+  }
+
+  .department-accordion-header {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .department-accordion-content.active {
+    padding: 8px;
+  }
+
+  .employee-accordion-header {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .employee-accordion-content.active {
+    padding: 14px;
+  }
+
+  .employee-stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+
+  .detail-table {
+    font-size: 11px;
+  }
+
+  .detail-table th,
+  .detail-table td {
+    padding: 6px 4px;
+  }
+
+  .detail-time-input {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  .detail-save-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .report-btn {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .report-textarea {
+    font-size: 11px;
+    padding: 8px;
   }
 }
 
@@ -709,28 +1126,18 @@ section h2 {
   gap: 32px;
 }
 
+/* 設定画面のレスポンシブ対応 */
+@media (max-width: 1024px) {
+  .employee-management {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
 @media (max-width: 768px) {
   .employee-management {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  main {
-    padding: 16px;
-  }
-
-  section {
-    padding: 16px;
-  }
-
-  .card-value {
-    font-size: 24px;
-  }
-
-  .employee-name {
-    font-size: 18px;
   }
 
   .password-modal {
@@ -738,11 +1145,56 @@ section h2 {
   }
 
   .settings-group {
-    margin-bottom: 24px;
-    padding-bottom: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .password-modal {
+    padding: 24px 16px;
+  }
+
+  .password-modal h2 {
+    font-size: 20px;
+  }
+
+  .password-modal input {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .password-submit-btn,
+  .password-back-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .settings-group {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+
+  .settings-group h3 {
+    font-size: 18px;
+  }
+
+  .settings-group h4 {
+    font-size: 15px;
+  }
+
+  .form-item input,
+  .form-item select {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+
+  .settings-btn {
+    font-size: 14px;
+    padding: 10px 20px;
   }
 
   .employee-management {
-    gap: 24px;
+    gap: 20px;
   }
 }

@@ -31,8 +31,13 @@ header #todayTime {
   font-size: 90px;
 }
 
-/* レスポンシブ: ヘッダーのフォントサイズ */
+/* レスポンシブ: ヘッダーのフォントサイズとパディング */
 @media (max-width: 1024px) {
+  header {
+    padding: 46px 14px 0;
+    margin: 0 auto 22px;
+  }
+
   header #today {
     font-size: 30px;
   }
@@ -40,25 +45,71 @@ header #todayTime {
   header #todayTime {
     font-size: 74px;
   }
+
+  .admin-link {
+    top: 14px;
+    right: 14px;
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  main {
+    padding: 0 14px 14px;
+    gap: 11px;
+  }
 }
 
 @media (max-width: 768px) {
+  header {
+    padding: 44px 12px 0;
+    margin: 0 auto 20px;
+  }
+
   header #today {
-    font-size: 26px;
+    font-size: 30px;
   }
 
   header #todayTime {
-    font-size: 56px;
+    font-size: 74px;
+  }
+
+  .admin-link {
+    top: 12px;
+    right: 12px;
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  main {
+    padding: 0 12px 12px;
+    gap: 10px;
   }
 }
 
 @media (max-width: 480px) {
+  header {
+    padding: 42px 10px 0;
+    margin: 0 auto 18px;
+  }
+
   header #today {
     font-size: 20px;
   }
 
   header #todayTime {
     font-size: 44px;
+  }
+
+  .admin-link {
+    top: 10px;
+    right: 10px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  main {
+    padding: 0 10px 10px;
+    gap: 8px;
   }
 }
 
@@ -71,11 +122,11 @@ ul {
 header {
   text-align: center;
   /* 管理者ボタン分の上余白を確保しつつ、下は詰める */
-  padding: 64px 16px 0;
+  padding: 48px 16px 0;
   position: relative;
   max-width: 1100px;
   /* 時間の下に24px空ける */
-  margin: 16px auto 24px;
+  margin: 0 auto 24px;
   /* 背景は消して、文字だけ見せる */
   background: transparent;
   border-radius: 0;
@@ -86,22 +137,6 @@ header {
   display: block;
 }
 
-/* レスポンシブ: ヘッダーのパディング */
-@media (max-width: 768px) {
-  header {
-    padding: 56px 12px 0;
-    margin: 12px auto 24px;
-    min-height: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  header {
-    padding: 52px 10px 0;
-    margin: 10px auto 24px;
-    min-height: auto;
-  }
-}
 
 /* （一つ前に戻す）管理者リンクはヘッダー内の右上 */
 
@@ -127,20 +162,6 @@ main {
   box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
-  main {
-    padding: 0 12px 12px;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  main {
-    padding: 0 10px 10px;
-    gap: 8px;
-  }
-}
-
 .admin-link {
   position: absolute;
   top: 16px;
@@ -156,24 +177,6 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* レスポンシブ: 管理者リンク */
-@media (max-width: 768px) {
-  .admin-link {
-    top: 12px;
-    right: 12px;
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .admin-link {
-    top: 8px;
-    right: 8px;
-    padding: 6px 10px;
-    font-size: 11px;
-  }
-}
 
 .admin-link:hover {
   background: #667eea;
@@ -319,6 +322,47 @@ main {
   text-align: center;
 }
 
+.department-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dept-btn {
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid #4a90e2;
+  border-radius: 10px;
+  background: #fff;
+  color: #4a90e2;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dept-btn:hover {
+  background: #e8f0f8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dept-btn.active {
+  background: #4a90e2;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.dept-btn:active {
+  transform: translateY(0);
+  opacity: 0.8;
+}
+
 main .names ul {
   list-style: none;
   margin: 0;
@@ -425,31 +469,22 @@ main .names li:active {
   background: #6c757d;
   color: #fff;
   border: none;
-  border-radius: 12px;
-  padding: 16px 48px;
-  font-size: 18px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 500;
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1002;
   pointer-events: none;
   opacity: 0;
-  bottom: 40px;
-  min-width: 200px;
-}
-
-.close-button:hover {
-  background: #5a6268;
-  transform: translateX(-50%) translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  bottom: 30px;
+  min-width: 120px;
 }
 
 .close-button:active {
-  transform: translateX(-50%) translateY(-50px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0.8;
 }
 
 .names.correct~#close {
@@ -598,8 +633,8 @@ main .names li:active {
   margin: 8px;
 }
 
-/* レスポンシブ対応: タブレット */
-@media (max-width: 1024px) and (min-width: 769px) {
+/* レスポンシブ対応: タブレット（1024px以下） */
+@media (max-width: 1024px) {
   main .names ul {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
@@ -622,10 +657,37 @@ main .names li:active {
     font-size: 17px;
     min-width: 110px;
   }
+
+  .department-buttons {
+    gap: 10px;
+    padding: 18px;
+  }
+
+  .dept-btn {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+
+  .close-button {
+    padding: 13px 40px;
+    font-size: 17px;
+    bottom: 35px;
+  }
 }
 
-/* レスポンシブ対応: スマホ（小） */
+/* レスポンシブ対応: スマホ（768px以下） */
 @media (max-width: 768px) {
+  .department-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .dept-btn {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+
   main .names ul {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 8px;
@@ -653,10 +715,25 @@ main .names li:active {
   }
 
   .close-button {
-    padding: 14px 36px;
-    font-size: 16px;
-    min-width: 160px;
-    bottom: 30px;
+    padding: 12px 24px;
+    font-size: 15px;
+    min-width: 100px;
+    bottom: 20px;
+    width: calc(100% - 40px);
+    max-width: 200px;
+  }
+
+  .confirm-modal {
+    padding: 24px 16px;
+    width: 95%;
+  }
+
+  .confirm-modal h3 {
+    font-size: 20px;
+  }
+
+  .confirm-modal p {
+    font-size: 14px;
   }
 }
 
@@ -734,8 +811,19 @@ main .names li:active {
   box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
-/* レスポンシブ対応: スマホ（超小） */
+/* レスポンシブ対応: スマホ小（480px以下） */
 @media (max-width: 480px) {
+  .department-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .dept-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
   main .names ul {
     grid-template-columns: repeat(2, 1fr);
     gap: 6px;
@@ -765,25 +853,25 @@ main .names li:active {
   }
 
   .close-button {
-    padding: 12px 32px;
-    font-size: 16px;
-    min-width: 140px;
-    bottom: 20px;
-    width: calc(100% - 40px);
-    max-width: 300px;
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 100px;
+    bottom: 16px;
+    width: calc(100% - 32px);
+    max-width: 180px;
   }
 
   .confirm-modal {
-    padding: 24px 16px;
-    width: 95%;
+    padding: 20px 12px;
+    width: 98%;
   }
 
   .confirm-modal h3 {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .confirm-modal p {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .confirm-buttons {
@@ -793,8 +881,8 @@ main .names li:active {
 
   .confirm-btn {
     width: 100%;
-    padding: 10px 24px;
-    font-size: 15px;
+    padding: 10px 20px;
+    font-size: 14px;
   }
 }
 
@@ -805,11 +893,11 @@ main .names li:active {
   }
 
   header #today {
-    font-size: 18px;
+    font-size: 30px;
   }
 
   header #todayTime {
-    font-size: 38px;
+    font-size: 74px;
   }
 
   .names {
@@ -839,8 +927,9 @@ main .names li:active {
 
   .close-button {
     bottom: 15px;
-    padding: 10px 24px;
+    padding: 10px 20px;
     font-size: 14px;
+    min-width: 100px;
   }
 }
 

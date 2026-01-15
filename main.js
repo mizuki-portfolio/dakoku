@@ -71,12 +71,71 @@ const getEmployeeList = () => {
   return DEFAULT_EMPLOYEES;
 };
 
+// 部署を抽出（例: "山田 太郎（営業）" -> "営業"）
+const extractDepartment = (employeeName) => {
+  const match = employeeName.match(/（(.+?)）/);
+  return match ? match[1] : 'その他';
+};
+
+// 部署一覧を取得
+const getDepartments = (employees) => {
+  const departments = new Set();
+  employees.forEach(emp => {
+    const dept = extractDepartment(emp);
+    departments.add(dept);
+  });
+  return Array.from(departments).sort();
+};
+
+// 現在選択中の部署（初期状態は未選択）
+let selectedDepartment = null;
+
+// 部署ボタンを表示
+const renderDepartmentButtons = () => {
+  const employees = getEmployeeList();
+  const departments = getDepartments(employees);
+  const departmentButtons = document.querySelector('#departmentButtons');
+  
+  if (!departmentButtons) return;
+  
+  departmentButtons.innerHTML = '';
+  
+  // 部署ごとのボタン
+  departments.forEach(dept => {
+    const button = document.createElement('button');
+    button.className = 'dept-btn' + (selectedDepartment === dept ? ' active' : '');
+    button.textContent = dept;
+    button.addEventListener('click', () => {
+      if (selectedDepartment === dept) {
+        // 同じボタンを再度クリックしたら選択解除（初期状態に戻す）
+        selectedDepartment = null;
+        namesList.innerHTML = '';
+      } else {
+        selectedDepartment = dept;
+      }
+      renderEmployeeList();
+      renderDepartmentButtons();
+    });
+    departmentButtons.appendChild(button);
+  });
+};
+
 // 社員リストを表示
 const renderEmployeeList = () => {
   const employees = getEmployeeList();
   namesList.innerHTML = '';
 
-  employees.forEach(employeeName => {
+  // 部署が選択されていない場合は何も表示しない
+  if (selectedDepartment === null) {
+    return;
+  }
+
+  // 部署でフィルタリング
+  const filteredEmployees = selectedDepartment === 'all' 
+    ? employees 
+    : employees.filter(emp => extractDepartment(emp) === selectedDepartment);
+
+  filteredEmployees.forEach(employeeName => {
     const li = document.createElement('li');
     li.textContent = employeeName;
     li.addEventListener('click', () => {
@@ -92,10 +151,13 @@ const renderEmployeeList = () => {
 
 // 社員リスト更新イベントをリッスン
 window.addEventListener('employeeListUpdated', (event) => {
+  selectedDepartment = null; // リセット（部署ボタンのみ表示）
+  renderDepartmentButtons();
   renderEmployeeList();
 });
 
 // 初期化時に社員リストを表示
+renderDepartmentButtons();
 renderEmployeeList();
 
 
@@ -127,6 +189,11 @@ intime.addEventListener('click', () => {
 })
 
 timers = JSON.parse(localStorage.getItem('timers')) || [];
+
+// timersを保存する関数
+const setTimers = () => {
+  localStorage.setItem('timers', JSON.stringify(timers));
+};
 
 // デモ用の打刻履歴を数日分生成（既存が空のときだけ）
 const DEMO_TIMERS_SEEDED_KEY = 'demoTimersSeeded';
@@ -187,10 +254,6 @@ const seedDemoTimersIfEmpty = () => {
 };
 
 seedDemoTimersIfEmpty();
-
-const setTimers = () => {
-  localStorage.setItem('timers', JSON.stringify(timers));
-}
 
 // 社員リストのクリックイベントはrenderEmployeeList内で設定済み
 
