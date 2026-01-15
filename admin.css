@@ -529,7 +529,7 @@ section h2 {
   padding: 6px 10px;
   border: 2px solid #e9ecef;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   background: #fff;
 }
 
@@ -613,7 +613,7 @@ section h2 {
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.45;
   background: #fff;
   resize: vertical;
@@ -776,7 +776,7 @@ section h2 {
   }
 
   .report-textarea {
-    font-size: 12px;
+    font-size: 16px;
     padding: 10px;
   }
 }
@@ -874,7 +874,7 @@ section h2 {
   }
 
   .detail-time-input {
-    font-size: 12px;
+    font-size: 16px;
     padding: 4px 6px;
   }
 
@@ -889,7 +889,7 @@ section h2 {
   }
 
   .report-textarea {
-    font-size: 11px;
+    font-size: 16px;
     padding: 8px;
   }
 }
@@ -1160,7 +1160,7 @@ section h2 {
   }
 
   .password-modal input {
-    font-size: 14px;
+    font-size: 16px;
     padding: 10px 14px;
   }
 
@@ -1185,7 +1185,7 @@ section h2 {
 
   .form-item input,
   .form-item select {
-    font-size: 14px;
+    font-size: 16px;
     padding: 8px 14px;
   }
 

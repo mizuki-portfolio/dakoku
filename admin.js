@@ -40,6 +40,8 @@ const addEmployeeError = document.querySelector('#addEmployeeError');
 const removeEmployeeSelect = document.querySelector('#removeEmployeeSelect');
 const removeEmployeeBtn = document.querySelector('#removeEmployeeBtn');
 const removeEmployeeError = document.querySelector('#removeEmployeeError');
+const resetDataBtn = document.querySelector('#resetDataBtn');
+const resetDataError = document.querySelector('#resetDataError');
 
 // 画面判定
 const isTimeManagementPage = monthSelect !== null;
@@ -842,6 +844,29 @@ if (isSettingsPage) {
 
       setTimeout(() => {
         removeEmployeeError.textContent = '';
+      }, 3000);
+    });
+  }
+
+  // データリセット機能
+  if (resetDataBtn) {
+    resetDataBtn.addEventListener('click', () => {
+      if (!confirm('すべてのデータを削除して初期状態に戻しますか？\n\nこの操作は取り消せません。')) {
+        return;
+      }
+
+      // すべてのLocalStorageデータを削除
+      localStorage.removeItem('timers');
+      localStorage.removeItem('employeeList');
+      localStorage.removeItem('adminPassword');
+      localStorage.removeItem('demoTimersSeeded');
+
+      resetDataError.style.color = '#28a745';
+      resetDataError.textContent = 'データをリセットしました。ページを再読み込みします...';
+
+      // 3秒後にページを再読み込み
+      setTimeout(() => {
+        window.location.reload();
       }, 3000);
     });
   }
